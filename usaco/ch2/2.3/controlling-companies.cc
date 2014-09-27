@@ -21,22 +21,28 @@ using namespace std;
 typedef pair<int, int> pii;
 typedef long long ll;
 
-#define FILEIO
+//#define FILEIO
+
 int o[MAXN][MAXN];
 int g[MAXN][MAXN];
+int in[MAXN];
 
 int owns(int u, int v) {
 	if (o[u][v] != -1) return o[u][v];
-	//printf("%d %d\n", u, v);
-	if (u == v) return o[u][v] = 1;
-	if (g[u][v] > 50) return o[u][v] = 1;
+	if (u == v || g[u][v] > 50) return o[v][u] = 0, o[u][v] = 1;
 	int tot = 0;
-	for (int i = 1; i < MAXN; ++i) {
-		if (i != v && (o[u][i] == 1 || (g[u][i] && owns(u, i)))) {
-			tot += g[i][v];
+	printf("%d %d\n", u, v);
+	for (int k = 1; k < MAXN; ++k) {
+		if (k == u || k == v || !in[k]) continue;
+		if ((o[u][k] = owns(u, k)) == 1) {
+			tot += g[u][k];
+		}
+		if (tot > 50) {
+			o[v][u] = 0;
+			return o[u][v] = 1;
 		}
 	}
-	return o[u][v] = (tot > 50);
+	return o[u][v] = 0;
 }
 
 int main() {
@@ -50,11 +56,13 @@ int main() {
 		int u, v, p;
 		scanf("%d %d %d", &u, &v, &p);
 		g[u][v] = p;
+		in[u] = in[v] = 1;
 	}
 	memset(o, -1, sizeof(o));
 	for (int i = 1; i < MAXN; ++i) {
 		for (int j = 1; j < MAXN; ++j) {
-			if (i != j && owns(i, j)) {
+			if (i == j || !in[i] || !in[j]) continue;
+			if ((o[i][j] = owns(i, j)) == 1) {
 				printf("%d %d\n", i, j);
 			}
 		}
