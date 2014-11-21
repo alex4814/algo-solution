@@ -38,3 +38,4 @@ int main() {
 	printf("%s %02d:%02d\n", day[d], h, m);
 	return 0;
 }
+
