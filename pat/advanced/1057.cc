@@ -16,61 +16,62 @@ using namespace std;
 typedef pair<int, int> pii;
 typedef long long ll;
 
-vector<int> sk;
-char op[15];
-priority_queue<int> max_heap;
-priority_queue< int, vector<int>, greater<int> > min_heap;
+int c[MAXN];
 
-void insert(int x) {
-	if (max_heap.empty() && min_heap.empty()) {
-		min_heap.push(x);
-	} else if (max_heap.empty()) {
-	
-	} else if (min_heap.empty()) {
-	
-	} else {
-		
+int lowbit(int x) {
+	return x & -x;
+}
+
+int sum(int n) {
+	int r = 0;
+	while (n > 0) {
+		r += c[n];
+		n -= lowbit(n);
+	}
+	return r;
+}
+
+void modify_by_one(int x, int one) {
+	while (x < MAXN) {
+		c[x] += one;
+		x += lowbit(x);
 	}
 }
 
-void remove(int x) {
-
+int median(int x) {
+	int l = 1, r = MAXN;
+	while (l < r) {
+		int m = l + (r - l) / 2;
+		sum(m) >= x ? r = m : l = m + 1;
+	}
+	return l;
 }
 
-void adjust() {
-	
-}
+vector<int> stack;
 
 int main() {
 	int n;
 	scanf("%d", &n);
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0, x; i < n; ++i) {
+		char op[20];
 		scanf("%s", op);
-		if (op[1] == 'o') {
-			if (sk.empty()) {
-				printf("Invalid\n");
-			} else {
-				int x = sk.back();
-				printf("%d\n", x);
-				sk.pop_back();
-				remove(x);
-				adjust()
-			}
-		} else if (op[1] == 'e') {
-			if (sk.empty()) {
-				printf("Invalid\n");
-			} else {
-				printf("%d\n", min_heap.top());
-			}
-		} else {
-			int x;
+		if (op[1] == 'u') {
 			scanf("%d", &x);
-			sk.push_back(x);
-			insert(x);
-			adjust();
+			modify_by_one(x, 1);
+			stack.push_back(x);
+		} else {
+			if (stack.empty()) {
+				printf("Invalid\n");
+			} else if (op[1] == 'o') {
+				x = stack.back();
+				stack.pop_back();
+				modify_by_one(x, -1);
+				printf("%d\n", x);
+			} else {
+				x = stack.size();
+				printf("%d\n", median((x + 1) / 2));
+			}
 		}
 	}
 	return 0;
 }
-
-
