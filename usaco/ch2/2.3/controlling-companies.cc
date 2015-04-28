@@ -11,6 +11,7 @@ TASK: concom
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
 #include <algorithm>
 using namespace std;
 
@@ -21,28 +22,30 @@ using namespace std;
 typedef pair<int, int> pii;
 typedef long long ll;
 
-//#define FILEIO
+#define FILEIO
 
-int o[MAXN][MAXN];
 int g[MAXN][MAXN];
-int in[MAXN];
+int o[MAXN][MAXN];
+int c[MAXN];
 
-int owns(int u, int v) {
-	if (o[u][v] != -1) return o[u][v];
-	if (u == v || g[u][v] > 50) return o[v][u] = 0, o[u][v] = 1;
-	int tot = 0;
-	printf("%d %d\n", u, v);
-	for (int k = 1; k < MAXN; ++k) {
-		if (k == u || k == v || !in[k]) continue;
-		if ((o[u][k] = owns(u, k)) == 1) {
-			tot += g[u][k];
+void bfs(int s) {
+	queue<int> q;
+	q.push(s);
+	while (!q.empty()) {
+		int x = q.front(); q.pop();
+		if (x == s) {
+			c[x] = 100;
 		}
-		if (tot > 50) {
-			o[v][u] = 0;
-			return o[u][v] = 1;
+		if (c[x] > 50) {
+			o[s][x] = 1;
+			for (int i = 0; i < MAXN; ++i) {
+				if (g[x][i] && !o[s][i]) {
+					c[i] += g[x][i];
+					q.push(i);
+				}
+			}
 		}
 	}
-	return o[u][v] = 0;
 }
 
 int main() {
@@ -55,16 +58,18 @@ int main() {
 	for (int i = 0; i < n; ++i) {
 		int u, v, p;
 		scanf("%d %d %d", &u, &v, &p);
-		g[u][v] = p;
-		in[u] = in[v] = 1;
+		g[--u][--v] = p;
 	}
-	memset(o, -1, sizeof(o));
-	for (int i = 1; i < MAXN; ++i) {
-		for (int j = 1; j < MAXN; ++j) {
-			if (i == j || !in[i] || !in[j]) continue;
-			if ((o[i][j] = owns(i, j)) == 1) {
-				printf("%d %d\n", i, j);
+	for (int i = 0; i < MAXN; ++i) {
+		memset(c, 0, sizeof(c));
+		bfs(i);
+	}
+	for (int i = 0; i < MAXN; ++i) {
+		for (int j = 0; j < MAXN; ++j) {
+			if (i == j || o[i][j] == 0) {
+				continue;
 			}
+			printf("%d %d\n", i + 1, j + 1);
 		}
 	}
 	return 0;
