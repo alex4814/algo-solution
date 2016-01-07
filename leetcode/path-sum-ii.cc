@@ -33,17 +33,15 @@ public:
     if (rt == NULL) {
       return;
     }
+    curPath.push_back(rt->val);
     if (rt->left == NULL && rt->right == NULL && rt->val == sum) {
-      curPath.push_back(rt->val);
       r.push_back(curPath);
-      curPath.pop_back();
     } else {
-      curPath.push_back(rt->val);
       int newSum = sum - rt->val;
       pathSumRec(rt->left, newSum, r, curPath);
       pathSumRec(rt->right, newSum, r, curPath);
-      curPath.pop_back();
     }
+    curPath.pop_back();
   }
   vector<vector<int> > pathSum(TreeNode *root, int sum) {
     vector<vector<int> > r;
