@@ -19,15 +19,38 @@ typedef pair<int, int> pii;
 class Solution {
 public:
   vector<int> twoSum(vector<int>& nums, int target) {
+    vector<pii> s;
+
+    int n = nums.size();
+    for (int i = 0; i < n; ++i) {
+      s.push_back(make_pair(nums[i], i));
+    }
+    sort(s.begin(), s.end());
+
+    int a, b;
+    for (int i = 0; i < n; ++i) {
+      int x = s[i].first;
+      int y = target - x;
+      a = s[i].second;
+      b = lower_bound(s.begin() + i + 1, s.end(), make_pair(y, 0)) - s.begin();
+      if (s[b].first == y) {
+        b = s[b].second;
+        break;
+      }
+    }
+
+    if (a > b) {
+      swap(a, b);
+    }
+    vector<int> ret = {a + 1, b + 1};
+    return ret;
   }
 };
 
 int main() {
   Solution s = Solution();
-  // the iterator constructor can also be used to construct from arrays:
-  int myints[] = {0,77,7,0};
-  vector<int> a(myints, myints + sizeof(myints) / sizeof(int) );
-  vector<int> r = s.twoSum(a, 0);
+  vector<int> a = {-1,-2,-3,-4,-5};
+  vector<int> r = s.twoSum(a, -8);
   cout << r[0] << " " << r[1] << endl;
   return 0;
 }
