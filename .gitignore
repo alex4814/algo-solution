@@ -3,5 +3,7 @@
 *.txt
 *.in
 *.class
+*.o
+*.exe
 .*
 !.gitignore
