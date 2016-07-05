@@ -1,4 +1,5 @@
 #include <vector>
+#include <climits>
 #include <algorithm>
 
 using namespace std;
@@ -6,25 +7,31 @@ using namespace std;
 class Solution {
 public:
   double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-    int x = INT_MAX, y = INT_MIN;
-    if (!nums1.empty()) {
-      x = min(x, nums1.front());
-      y = max(y, nums1.back());
+    int n1 = nums1.size();
+    int n2 = nums2.size();
+    if (n2 < n1) {
+      return findMedianSortedArrays(nums2, nums1);
     }
-    if (!nums2.empty()) {
-      x = min(x, nums2.front());
-      y = max(y, nums2.back());
+    if (n1 == 0) {
+      return (nums2[(n2 - 1) / 2] + nums2[n2 / 2]) / 2.0;
     }
-    int l = x, r = y + 1;
-    while (l < r) {
-      int m = l + (r - l) / 2;
-      int l1 = lower_bound(nums1.begin(), nums1.end(), m) - nums1.begin();
-      int u1 = upper_bound(nums1.begin(), nums1.end(), m) - nums1.begin();
-      int l2 = lower_bound(nums2.begin(), nums2.end(), m) - nums2.begin();
-      int u2 = upper_bound(nums2.begin(), nums2.end(), m) - nums2.begin();
-      int ll = l1 + l2 + 1;
-      int uu = u1 + u2;
+    int low = 0, high = (n1 << 1 | 1);
+    while (low < high) {
+      int k1 = low + (high - low) / 2;
+      int k2 = n1 + n2 - k1;
+      int l1 = k1 == 0 ? INT_MIN : nums1[(k1 - 1) / 2];
+      int r1 = k1 == 2 * n1 ? INT_MAX : nums1[k1 / 2];
+      int l2 = k2 == 0 ? INT_MIN : nums2[(k2 - 1) / 2];
+      int r2 = k2 == 2 * n2 ? INT_MAX : nums2[k2 / 2];
+      if (l1 <= r2 && l2 <= r1) {
+        return (max(l1, l2) + min(r1, r2)) / 2.0;
+      } else if (l1 > r2) {
+        high = k1;
+      } else {
+        low = k1 + 1;
+      }
     }
+    return -1;
   }
 };
 
