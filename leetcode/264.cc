@@ -1,33 +1,48 @@
+/*
+ * Creation Date: 2016-06-27
+ * Created By: alex4814
+ */
+
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <cctype>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 0x3f3f3f3f;
+const double EPS = 1e-8;
 
 class Solution {
 public:
   int nthUglyNumber(int n) {
-    if (n >= N) {
-      return INT_MAX;
-    }
-    int factors[] = { 2, 3, 5 };
-    f[0] = 1;
+    int p[] = { 0, 0, 0 };
+    vector<int> un(n);
+    un[0] = 1;
     for (int i = 1; i < n; ++i) {
-      int x = INT_MAX; // maximum
-      for (int j = i - 1; j >= 0 && f[j] > f[i - 1]/5; --j) {
-        if (f[j] >= x/2) continue;
-        for (int k = 0; k < 3; ++k) {
-          int m = f[j] * factors[k];
-          if (m > 0 && m > f[i - 1] && m < x) {
-            x = m; break;
-          }
-        }
-      }
-      f[i] = x;
+      int x = un[p[0]] * 2;
+      int y = un[p[1]] * 3;
+      int z = un[p[2]] * 5;
+      int nun = min(x, min(y, z));
+      un[i] = nun;
+      if (x == nun) p[0]++;
+      if (y == nun) p[1]++;
+      if (z == nun) p[2]++;
     }
-    return f[n - 1];
+    return un.back();
   }
-private:
-  static const int N = 2000;
-  int f[N];
 };
 
 int main() {
+  Solution s;
+  cout << s.nthUglyNumber(1) << endl;
+  cout << s.nthUglyNumber(2) << endl;
+  cout << s.nthUglyNumber(3) << endl;
+  cout << s.nthUglyNumber(10) << endl;
   return 0;
 }

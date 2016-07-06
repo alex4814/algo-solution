@@ -11,26 +11,20 @@ using namespace std;
 #define MAXN 100005
 #define EPS 1e-8
 
-struct Point {
-  int x, y;
-};
-struct Rectangle {
-  Point bottom_left;
-  Point top_right;
-  int area() {
-    int width = top_right.x - bottom_left.x;
-    int height = top_right.y - bottom_left.y;
-    return width * height;
-  }
-  int intersect_area(Rectangle &b) {
-    
-  }
-};
-
 class Solution {
 public:
   int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
-    Rectangle r1 = 
+    if (A > E) {
+      return computeArea(E, F, G, H, A, B, C, D);
+    }
+    int a1 = (A - C) * (B - D);
+    int a2 = (E - G) * (F - H);
+    if (C <= E || H <= B || D <= F) {
+      return a1 + a2;
+    }
+    int x = min(C, G) - E;
+    int y = min(D, H) - max(B, F);
+    return a1 + a2 - x * y;
   }
 };
 
