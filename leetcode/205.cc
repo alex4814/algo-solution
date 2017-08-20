@@ -15,7 +15,20 @@ class Solution {
 public:
   bool isIsomorphic(string s, string t) {
     int n = s.size();
-    char mappings[26];
+    char mappings[256] = { 0 };
+    bool mapped[256] = { false };
+    for (int i = 0; i < n; ++i) {
+      if (mappings[s[i]] == 0) {
+        if (mapped[t[i]]) {
+          return false;
+        }
+        mappings[s[i]] = t[i];
+        mapped[t[i]] = true;
+      } else if (mappings[s[i]] != t[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 };
 
