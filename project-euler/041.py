@@ -8,7 +8,7 @@ import math
 def is_prime(y):
     if y % 2 == 0:
         return False
-    u = int(math.sqrt(float(x)))
+    u = int(math.sqrt(float(y)))
     for p in xrange(3, u+1, 2):
         if y % p == 0:
             return False
