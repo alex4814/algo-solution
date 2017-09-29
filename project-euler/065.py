@@ -39,9 +39,15 @@ def partials(n):
             yield 2 * x
             yield 1
 
-s = Fraction(0, 1)
-for p in partials(99):
-    s = (s + Fraction(p, 1)).reciprocal()
-s += Fraction(2, 1)
-print sum(map(int, str(s.n)))
+
+def main():
+    s = Fraction(0, 1)
+    for p in partials(99):
+        s = (s + Fraction(p, 1)).reciprocal()
+    s += Fraction(2, 1)
+    print sum(map(int, str(s.n)))
+
+
+if __name__ == '__main__':
+    main()
 

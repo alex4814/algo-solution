@@ -2,14 +2,12 @@ import math
 
 
 def non_square(n):
-    x = 1
-    y = 1
+    x, y = 1, 1
     lo, hi = 1**2, 2**2
     while y < n:
         if y == hi:
             x += 1
-            lo = x**2
-            hi = (x+1)**2
+            lo, hi = x**2, (x+1)**2
             continue
         if y > lo:
             yield y, x
@@ -42,17 +40,22 @@ def expand(*args):
     return ai, fsr, fm, fd
 
 
-odd = 0
-for x, a0 in non_square(10001):
-    next_ = (a0, x, a0, 1)
-    terms = []
-    while True:
-        next_ = expand(*next_)
-        if next_ in terms:
-            break
-        terms.append(next_)
-    ai = [t[0] for t in terms]
-    print 'sqrt({}) = [{};({})]'.format(x, a0, ai)
-    odd += (len(terms) & 1 > 0)
-print odd
+def main():
+    odd = 0
+    for x, a0 in non_square(10001):
+        next_ = (a0, x, a0, 1)
+        terms = []
+        while True:
+            next_ = expand(*next_)
+            if next_ in terms:
+                break
+            terms.append(next_)
+        ai = [t[0] for t in terms]
+        print 'sqrt({}) = [{};({})]'.format(x, a0, ai)
+        odd += (len(terms) & 1 > 0)
+    print odd
+
+
+if __name__ == '__main__':
+    main()
 
